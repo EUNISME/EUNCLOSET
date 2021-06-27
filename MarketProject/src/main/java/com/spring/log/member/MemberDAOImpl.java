@@ -41,8 +41,7 @@ public class MemberDAOImpl implements MemberDAO{
 
 	@Override
 	public void delete(MemberVO v) {
-		
-		
+		mybatis.delete("member-mapping.delete_sql", v);		
 	}
 
 	@Override
