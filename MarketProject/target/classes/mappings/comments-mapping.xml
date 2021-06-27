@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comments-mapping">
+	<resultMap type = "commentsVO" id = "commentsResult">
+	</resultMap>
+
+	<select id="selectmax_sql" resultMap="commentsResult">
+		<![CDATA[
+			select nvl(max(mno)+1,1) as max from comments
+		]]>
+	</select>
+
+	<select id="selectcomments_sql" resultMap="commentsResult" parameterType="commentsVO">
+		<![CDATA[
+			select * from comments where gno = #{gno}
+		]]>
+	</select>
+	
+	<insert id="insert_sql" parameterType="commentsVO">
+		<![CDATA[
+			insert into comments (mno, gno, id, com, m_regdate)
+			values (#{mno}, #{gno}, #{id}, #{com}, sysdate)
+		]]>			
+	</insert>	
+</mapper>

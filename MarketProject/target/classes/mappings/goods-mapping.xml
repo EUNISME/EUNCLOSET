@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="goods-mapping">
+	<resultMap type = "goodsVO" id = "goodsResult">
+	</resultMap>
+	
+	<select id="selectall_sql" resultMap="goodsResult" parameterType="goodsVO">
+		<![CDATA[
+			select rownum , K.* from 
+			(select rownum as rnum, gno, goodstype, goodsname, filename, price, contents, g_regdate from 
+			(select * from goods order by gno desc) K where rownum <= ${idx} + 4 ) K where rnum >= ${idx}
+		]]><!-- rownum 큰수 / rnum 작은수 -->
+	</select>
+	
+	<select id="selectgoods_sql" resultMap="goodsResult">
+		select rownum , K.* from 
+		(select rownum as rnum, 
+		gno, goodstype, goodsname, filename, price, contents, g_regdate from 
+		(select * from goods
+		<choose>
+			<when test= "goodstype =='outer'">
+				where goodstype = 'outer'
+			</when>
+			<when test= "goodstype =='shirts'">
+				where goodstype = 'shirts'
+			</when>
+			<when test= "goodstype =='pants'">
+				where goodstype = 'pants'
+			</when>
+			<when test= "goodstype =='skirt'">
+				where goodstype = 'skirt'
+			</when>
+		</choose>
+		<![CDATA[
+			) K where rownum <= ${idx} + 3 ) K where rnum >= ${idx}
+		]]><!-- rownum 큰수 / rnum 작은수 -->
+	</select>
+	
+	<select id="selectmax_sql" resultMap="goodsResult">
+		<![CDATA[
+			select nvl(max(gno)+1,1) as max from goods
+		]]>
+	</select>
+	
+	<select id="selecttypecount_sql" resultMap="goodsResult" parameterType="goodsVO">
+		<![CDATA[
+			select count(*) as totalrecord from goods
+		]]>
+		<choose>
+			<when test= "goodstype =='outer'">
+				where goodstype = 'outer'
+			</when>
+			<when test= "goodstype =='shirts'">
+				where goodstype = 'shirts'
+			</when>
+			<when test= "goodstype =='pants'">
+				where goodstype = 'pants'
+			</when>
+			<when test= "goodstype =='skirt'">
+				where goodstype = 'skirt'
+			</when>
+		</choose>
+		
+	</select>
+	
+	<select id="selectone_sql" resultMap="goodsResult" parameterType="goodsVO">
+		<![CDATA[
+			select * from goods where gno = #{gno}
+		]]>
+	</select>
+	
+	<select id="selectcount_sql" resultMap="goodsResult" parameterType="goodsVO">
+		<![CDATA[
+			select count(*) as totalrecord from goods
+		]]>
+		<choose>
+			<when test="ch1 == 'goodstype'" >          
+           		where goodstype like '%'||#{ch2}||'%'          
+        	</when>  
+            <when test="ch1 == 'regdate'" >           
+             	where g_regdate like '%'||#{ch2}||'%'           
+        	</when>
+		</choose>
+	</select>
+	
+	
+	
+	<insert id="insert_sql" parameterType="goodsVO">
+		<![CDATA[
+			insert into goods values (#{gno}, #{goodstype}, #{goodsname}, #{filename}, ${price}, #{contents}, sysdate)
+		]]>			
+	</insert>
+	
+	<update id="update_sql" parameterType="goodsVO">
+			<![CDATA[
+				update goods set goodsname= #{goodsname}, filename= #{filename}, price=${price}, contents=#{contents} where gno=#{gno}
+			]]>	
+	</update>
+	
+	<delete id="delete_sql" parameterType="goodsVO">
+		<![CDATA[
+			delete from goods where gno=#{gno}	
+		]]>			
+	</delete>
+	
+	<insert id="insertbasket_sql" parameterType="goodsVO">
+		<![CDATA[
+			insert into goods_buy values (#{gno}, #{goodstype}, #{goodsname}, #{filename}, ${price}, #{contents}, sysdate)
+		]]>			
+	</insert>
+
+</mapper>

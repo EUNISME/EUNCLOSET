@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+										"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- Alias 설정 -->
+	<typeAliases>
+		<typeAlias alias = "goodsVO" type = "com.spring.log.model.GoodsVO"/>
+		<typeAlias alias = "memberVO" type = "com.spring.log.model.MemberVO"/>
+		<typeAlias alias = "basketVO" type = "com.spring.log.model.BasketVO"/>
+		<typeAlias alias = "commentsVO" type = "com.spring.log.model.CommentsVO"/>
+	</typeAliases>
+	<!-- Sql Mapper 설정 -->
+	<mappers>
+		<mapper resource = "mappings/goods-mapping.xml"/>
+		<mapper resource = "mappings/member-mapping.xml"/>
+		<mapper resource = "mappings/basket-mapping.xml"/>
+		<mapper resource = "mappings/comments-mapping.xml"/>
+	</mappers>
+</configuration>

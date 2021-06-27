@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member-mapping">
+	<resultMap type = "memberVO" id = "memberResult">
+	</resultMap>
+	
+	<select id="selectall_sql" resultMap="memberResult" parameterType="memberVO">
+		select rownum , K.* from 
+		(select rownum as rnum, cno, id, name, 
+		(address0||' '||address1||' '||address2||' '||address3) as address, 
+		(phone1||'-'||phone2||'-'||phone3) as phone, 
+		(email1||'@'||email2) as email, regdate from 
+		(select * from member
+		<choose>
+			<when test="ch1 == 'cno'" >          
+           		where cno like '%'||#{ch2}||'%'          
+        	</when>  
+            <when test="ch1 == 'regdate'" >           
+             	where regdate like '%'||#{ch2}||'%'           
+        	</when> 
+		</choose>
+		<![CDATA[
+		 	order by cno asc) K where rownum <= ${idx} + 4 ) K where rnum >= ${idx}
+		]]><!-- rownum 큰수 / rnum 작은수 -->
+	</select>
+		
+	<select id="login_sql" resultMap="memberResult" parameterType="memberVO">
+		<![CDATA[
+			select * from member where id = #{id}
+		]]>
+	</select>
+	
+	<select id="selectone_sql" resultMap="memberResult" parameterType="memberVO">
+		<![CDATA[
+			select * from member where cno = #{cno}
+		]]>
+	</select>
+	
+	<select id="selectmax_sql" resultMap="memberResult">
+		<![CDATA[
+			select nvl(max(cno)+1,1) as max from member
+		]]>
+	</select>
+	
+	<select id="selectid_sql" resultType="int" parameterType="String">
+		<![CDATA[
+			select count(*) from member where id = #{id}
+		]]>
+	</select>
+	
+	<select id="selectcount_sql" resultType="memberVO">
+		<![CDATA[
+			select count(*) as totalrecord from member
+		]]>
+	</select>
+	
+	<insert id="insert_sql" parameterType="memberVO">
+		<![CDATA[
+			insert into member (cno, id, pwdbcrypt, name, address0, address1, address2, address3, phone1, phone2, phone3, email1, email2, regdate)
+			values (#{cno}, #{id}, #{pwdbcrypt}, #{name},#{address0}, #{address1}, #{address2}, #{address3}, #{phone1}, #{phone2}, #{phone3}, #{email1}, #{email2}, sysdate)
+		]]>			
+	</insert>
+	
+	<delete id="delete_sql" parameterType="memberVO">
+		<![CDATA[
+			delete from member where cno=#{cno}	
+		]]>			
+	</delete>
+	
+	<update id="update_sql" parameterType="memberVO">
+		<![CDATA[
+			update member set pwdbcrypt=#{pwdbcrypt}, 
+			address0=#{address0}, address1=#{address1}, address2=#{address2}, address3=#{address3}, 
+			phone1=#{phone1}, phone2=#{phone2}, phone3=#{phone3},
+			email1=#{email1}, email2=#{email2} where cno=#{cno}
+		]]>			
+	</update>
+</mapper>

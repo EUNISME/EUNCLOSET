@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="basket-mapping">
+	<resultMap type = "basketVO" id = "basketResult">
+	</resultMap>
+	<select id="select_sql" resultMap="basketResult" parameterType="basketVO">
+		<![CDATA[
+			select * from basket where id = #{id}
+		]]>
+	</select>
+
+	<insert id="insert_sql" parameterType="basketVO">
+		<![CDATA[
+			insert into basket values (#{cno}, #{id}, #{goodstype}, #{goodsname}, #{goodssize}, #{filename}, ${price}, sysdate)
+		]]>			
+	</insert>
+	
+	<delete id="delect_sql" parameterType="basketVO">
+		<![CDATA[
+			delete from basket where goodsname = #{goodsname}
+		]]>
+	</delete>
+</mapper>
